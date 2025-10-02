@@ -1,29 +1,29 @@
 package core
 
-import {
+import (
 	"context"
+	"errors"
 	"log"
 	"sync"
-	"errors"
+)
 
-}
-//PLayer=orchestration only (SRP pattern). 
+// PLayer=orchestration only (SRP pattern).
 type Player struct {
-	reg 	  Registry
-	out   Output
+	reg Registry
+	out Output
 	pl  Playlist
 
-	mu   sync.Mutex
-	curIdx int
-	curTrack *Track
+	mu        sync.Mutex
+	curIdx    int
+	curTrack  *Track
 	curStream DecodedStream
 }
 
 func NewPlayer(reg Registry, out Output, pl Playlist) *Player {
 	return &Player{
-		reg: reg,
-		out: out,
-		pl: pl,
+		reg:    reg,
+		out:    out,
+		pl:     pl,
 		curIdx: -1,
 	}
 }
@@ -32,7 +32,7 @@ func (p *Player) Play(ctx context.Context) error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	if p..curTrack != nil && p.out.State() == Playing {
+	if p.curTrack != nil && p.out.State() == Playing {
 		p.out.Resume()
 		return nil
 	}
@@ -47,12 +47,13 @@ func (p *Player) Play(ctx context.Context) error {
 func (p *Player) Pause() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	if p.out.Pause()
+	p.out.Pause()
 }
 
 func (p *Player) Resume() {
 	p.mu.Lock()
-	defer p.out.State() == Paused {
+	defer p.mu.Unlock()
+	if p.out.State() == Paused {
 		p.out.Resume()
 	}
 }
@@ -60,10 +61,10 @@ func (p *Player) Resume() {
 func (p *Player) Stop() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	p.stopCurrent()
+	p.stopCurrent_locked()
 }
 
-func (p *Player) Next(){
+func (p *Player) Next() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -77,7 +78,7 @@ func (p *Player) Next(){
 
 }
 
-func (p *Player) Previous(){
+func (p *Player) Previous() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 

@@ -13,7 +13,7 @@ type Track struct {
 type Decoder interface {
 	CanHandle(path string) bool
 	//Decode produces a decodedStream and basic matadata
-	Decoder(ctx context.Context, path string) (DecodedStream, Track, error)
+	Decode(ctx context.Context, path string) (DecodedStream, *Track, error)
 }
 
 
