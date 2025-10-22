@@ -21,3 +21,4 @@ func (r *registry) FindDecoder(path string) Decoder {
 	}
 	return nil
 }
+
