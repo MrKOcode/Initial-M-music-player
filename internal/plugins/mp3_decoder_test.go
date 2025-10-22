@@ -21,10 +21,12 @@ func TestMP3Decoder_CanHandle(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := decoder.CanHandle(tt.path)
-		if got != tt.want {
-			t.Errorf("CanHandle(%q) = %v; want %v", tt.path, got, tt.want)
-		}
+		t.Run(tt.path, func(t *testing.T) {
+			got := decoder.CanHandle(tt.path)
+			if got != tt.want {
+				t.Errorf("CanHandle(%q) = %v; want %v", tt.path, got, tt.want)
+			}
+		})
 	}
 }
 
